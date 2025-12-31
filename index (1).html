@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIO Custom And Detailing | Premium Auto Detailing</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(5, 150, 105, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+            color: #d1d5db;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #059669, #10b981);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #10b981;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #10b981;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%);
+            border-left: 1px solid rgba(5, 150, 105, 0.3);
+            z-index: 200;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu.open {
+            right: 0;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #d1d5db;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: #10b981;
+            padding-left: 0.5rem;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 20px;
+            cursor: pointer;
+            z-index: 250;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #webgl-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 0;
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(10, 10, 10, 0.95) 100%);
+        }
+        
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(10, 10, 10, 0.3) 0%, rgba(10, 10, 10, 0.7) 70%, rgba(10, 10, 10, 0.95) 100%);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(5, 150, 105, 0.4);
+        }
+        
+        .btn-secondary {
+            border: 2px solid #059669;
+            background: rgba(5, 150, 105, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(5, 150, 105, 0.2);
+            border-color: #10b981;
+        }
+        
+        .service-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(5, 150, 105, 0.6);
+            box-shadow: 0 20px 50px rgba(5, 150, 105, 0.2);
+        }
+        
+        .review-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-left: 3px solid #059669;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .star-icon {
+            color: #fbbf24;
+        }
+        
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-handle {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: #059669;
+            cursor: ew-resize;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(5, 150, 105, 0.8);
+        }
+        
+        .slider-handle::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #059669;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(5, 150, 105, 0.6);
+        }
+        
+        .slider-handle::after {
+            content: '⟷';
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        
+        .before-image {
+            clip-path: inset(0 0 0 0);
+        }
+        
+        .sticky-cta {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sticky-cta.visible {
+            opacity: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .sticky-cta {
+                display: none;
+            }
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.3), transparent);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .accent-glow {
+            text-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+        }
+
+        /* Scroll padding for fixed header */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+
+        /* Booking Modal Styles */
+        .booking-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .booking-modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .booking-modal {
+            background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(-20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 40px auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(5, 150, 105, 0.1);
+        }
+
+        .booking-modal-overlay.open .booking-modal {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .close-modal-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .close-modal-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            margin-bottom: 1rem;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #059669;
+            background: rgba(5, 150, 105, 0.05);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Date Picker Styles */
+        .date-picker-wrapper {
+            position: relative;
+        }
+
+        .date-input {
+            cursor: pointer;
+            padding-right: 3rem;
+        }
+
+        .date-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+
+        .custom-calendar {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 320px;
+            background: #1a1a1a;
+            border: 1px solid rgba(5, 150, 105, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            z-index: 400;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-calendar.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calendar-month-year {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .calendar-nav {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: rgba(5, 150, 105, 0.2);
+            border-color: #059669;
+            color: #10b981;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .calendar-weekdays span {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            padding: 0.5rem 0;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: transparent;
+        }
+
+        .calendar-day:hover:not(.disabled):not(.empty) {
+            background: rgba(5, 150, 105, 0.2);
+            color: #10b981;
+        }
+
+        .calendar-day.selected {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.today {
+            border: 1px solid #059669;
+        }
+
+        .calendar-day.disabled {
+            color: #4b5563;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.empty {
+            cursor: default;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(5, 150, 105, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .submit-btn:hover .submit-btn-icon {
+            transform: translateX(4px);
+        }
+
+        /* Success Message */
+        .booking-success {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .booking-success.hidden {
+            display: none;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: white;
+            animation: successPop 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-details {
+            background: rgba(5, 150, 105, 0.1);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .success-details p {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #d1d5db;
+            font-size: 0.875rem;
+        }
+
+        .success-details p:last-child {
+            border-bottom: none;
+        }
+
+        .success-details strong {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .booking-modal {
+                padding: 1.5rem;
+                margin: 20px auto;
+            }
+
+            .custom-calendar {
+                width: 100%;
+                left: 0;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center">
+                        <span class="text-white font-black text-lg">M</span>
+                    </div>
+                    <span class="logo-text hidden sm:block">MIO DETAILING</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#reviews" class="nav-link">Reviews</a>
+                    <a href="#services" class="nav-link">Services</a>
+                    <a href="#why-mio" class="nav-link">Why MIO</a>
+                    <a href="#gallery" class="nav-link">Gallery</a>
+                    <button onclick="openBookingModal()" class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold text-white">
+                        Book Now
+                    </button>
+                </nav>
+
+                <!-- Mobile Hamburger -->
+                <div class="hamburger md:hidden" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu" id="mobileMenu">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center">
+                    <span class="text-white font-black text-lg">M</span>
+                </div>
+                <span class="logo-text">MIO DETAILING</span>
+            </div>
+        </div>
+        
+        <div class="flex-1">
+            <a href="#home" class="mobile-nav-link">Home</a>
+            <a href="#reviews" class="mobile-nav-link">Reviews</a>
+            <a href="#services" class="mobile-nav-link">Services</a>
+            <a href="#why-mio" class="mobile-nav-link">Why MIO</a>
+            <a href="#gallery" class="mobile-nav-link">Gallery</a>
+            <a href="#contact" class="mobile-nav-link">Contact</a>
+        </div>
+
+        <div class="mt-auto pt-8">
+            <button onclick="openBookingModal(); toggleMobileMenu();" class="btn-primary w-full py-4 rounded-full text-center font-bold text-white block">
+                Book Your Detail
+            </button>
+            <p class="text-gray-500 text-sm text-center mt-4">
+                Call: <a href="tel:+1234567890" class="text-emerald-500">(123) 456-7890</a>
+            </p>
+        </div>
+    </nav>
+
+    <!-- Hero Section with WebGL Background -->
+    <section id="home" class="hero-section flex items-center justify-center">
+        <!-- WebGL Canvas -->
+        <canvas id="webgl-canvas"></canvas>
+        
+        <!-- Dark overlay for readability -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content max-w-7xl mx-auto px-6 py-20 text-center">
+            <div class="mb-8">
+                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                    Custom Auto Detailing.<br>
+                    <span class="text-gradient">Flawless Results.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-light mb-8">
+                    Fast service. Spotless interiors. Honest pricing.
+                </p>
+            </div>
+            
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <button onclick="openBookingModal()" class="btn-primary px-10 py-5 rounded-full text-lg font-bold text-white inline-block">
+                    Book Now
+                </button>
+                <button onclick="openBookingModal()" class="btn-secondary px-10 py-5 rounded-full text-lg font-bold text-white inline-block">
+                    Get a Quote
+                </button>
+            </div>
+            
+            <!-- Google Reviews Indicator -->
+            <div class="inline-flex items-center gap-3 bg-black/40 backdrop-blur-sm px-6 py-3 rounded-full border border-emerald-600/30">
+                <div class="flex gap-1">
+                    <span class="star-icon text-xl">★</span>
+                    <span class="star-icon text-xl">★</span>
+                    <span class="star-icon text-xl">★</span>
+                    <span class="star-icon text-xl">★</span>
+                    <span class="star-icon text-xl">★</span>
+                </div>
+                <span class="text-gray-300 font-medium">Google Reviews</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section id="reviews" class="py-24 px-6 bg-black">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-16 accent-glow">
+                What Customers Say
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="review-card p-8 rounded-lg">
+                    <div class="flex gap-1 mb-4">
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Very fast service, my car was spotless… communication was on point."
+                    </p>
+                    <p class="text-emerald-500 font-semibold">— Marcus T.</p>
+                </div>
+                
+                <!-- Review 2 -->
+                <div class="review-card p-8 rounded-lg">
+                    <div class="flex gap-1 mb-4">
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Thank you Isaac, my car came out great!"
+                    </p>
+                    <p class="text-emerald-500 font-semibold">— Sarah M.</p>
+                </div>
+                
+                <!-- Review 3 -->
+                <div class="review-card p-8 rounded-lg">
+                    <div class="flex gap-1 mb-4">
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                        <span class="star-icon">★</span>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Great prices, great work… left my Nissan like new."
+                    </p>
+                    <p class="text-emerald-500 font-semibold">— James R.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-16 accent-glow">
+                Premium Services
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card p-8 rounded-xl">
+                    <div class="text-5xl mb-6">🚗</div>
+                    <h3 class="text-2xl font-bold mb-4">Full Interior Detailing</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Deep clean every surface. Vacuum, steam, condition. Your interior will look and smell brand new.
+                    </p>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card p-8 rounded-xl">
+                    <div class="text-5xl mb-6">✨</div>
+                    <h3 class="text-2xl font-bold mb-4">Exterior Detailing</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Hand wash, clay bar, polish, and wax. Restore that showroom shine and protect your paint.
+                    </p>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card p-8 rounded-xl">
+                    <div class="text-5xl mb-6">🧹</div>
+                    <h3 class="text-2xl font-bold mb-4">Carpet & Rug Cleaning</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Remove stains, dirt, and odors. Professional-grade extraction for spotless carpets.
+                    </p>
+                </div>
+                
+                <!-- Service 4 -->
+                <div class="service-card p-8 rounded-xl">
+                    <div class="text-5xl mb-6">🔝</div>
+                    <h3 class="text-2xl font-bold mb-4">Headliner & Deep Interior</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Tackle the tough spots. Headliner stains, leather conditioning, and precision detailing.
+                    </p>
+                </div>
+                
+                <!-- Service 5 -->
+                <div class="service-card p-8 rounded-xl">
+                    <div class="text-5xl mb-6">⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Custom Packages</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Your car, your needs. We'll build a custom detailing package that fits your goals and budget.
+                    </p>
+                </div>
+                
+                <!-- Service 6 -->
+                <div class="service-card p-8 rounded-xl bg-gradient-to-br from-emerald-900/30 to-emerald-950/30 border-emerald-600/40">
+                    <div class="text-5xl mb-6">💎</div>
+                    <h3 class="text-2xl font-bold mb-4">Full Detail Package</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        The complete transformation. Inside, outside, every detail. Premium care for your vehicle.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Why MIO Section -->
+    <section id="why-mio" class="py-24 px-6 bg-black">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-16 accent-glow">
+                Why MIO?
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="flex gap-6 items-start">
+                    <div class="text-emerald-500 text-4xl font-black">01</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-3">Fast Turnaround</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            We respect your time. Quality work delivered on schedule, every time.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="text-emerald-500 text-4xl font-black">02</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-3">Attention to Detail</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            We don't cut corners. Every inch of your vehicle gets professional care.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="text-emerald-500 text-4xl font-black">03</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-3">Clear Communication</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Know what you're getting, when you're getting it, and what it costs. No surprises.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start">
+                    <div class="text-emerald-500 text-4xl font-black">04</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-3">Fair Pricing</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Premium results without the premium markup. Honest pricing for honest work.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 items-start md:col-span-2 justify-center">
+                    <div class="text-emerald-500 text-4xl font-black">05</div>
+                    <div class="max-w-md">
+                        <h3 class="text-2xl font-bold mb-3">Repeat Customers</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Our best marketing is your experience. Most clients come back, and they bring friends.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Before/After Section -->
+    <section id="gallery" class="py-24 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-6 accent-glow">
+                See The Transformation
+            </h2>
+            <p class="text-center text-gray-400 mb-16 text-lg">
+                Drag the slider to see the difference
+            </p>
+            
+            <div class="slider-container rounded-xl overflow-hidden shadow-2xl" id="sliderContainer">
+                <div class="relative w-full" style="padding-bottom: 56.25%;">
+                    <!-- After Image (Background) -->
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23059669;stop-opacity:0.4'/%3E%3Cstop offset='100%25' style='stop-color:%231a1a1a;stop-opacity:0.9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='%231a1a1a' width='800' height='450'/%3E%3Crect fill='url(%23a)' width='800' height='450'/%3E%3Ctext x='400' y='210' font-family='Arial,sans-serif' font-size='28' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EAFTER%3C/text%3E%3Ctext x='400' y='250' font-family='Arial,sans-serif' font-size='18' fill='%2310b981' text-anchor='middle'%3EProfessional Detail Complete%3C/text%3E%3C/svg%3E" 
+                         alt="After detailing" 
+                         class="absolute inset-0 w-full h-full object-cover">
+                    
+                    <!-- Before Image (Overlay) -->
+                    <div class="before-image absolute inset-0" id="beforeImage">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect fill='%23262626' width='800' height='450'/%3E%3Ctext x='400' y='210' font-family='Arial,sans-serif' font-size='28' font-weight='bold' fill='%23666666' text-anchor='middle'%3EBEFORE%3C/text%3E%3Ctext x='400' y='250' font-family='Arial,sans-serif' font-size='18' fill='%23999999' text-anchor='middle'%3ENormal Wear and Tear%3C/text%3E%3C/svg%3E" 
+                             alt="Before detailing" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    
+                    <!-- Slider Handle -->
+                    <div class="slider-handle" id="sliderHandle" style="left: 50%;"></div>
+                </div>
+            </div>
+            
+            <p class="text-center text-gray-500 mt-8 italic">
+                Every detail matters. Every surface cleaned. Every customer satisfied.
+            </p>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Hard Close CTA Section -->
+    <section id="contact" class="py-32 px-6 bg-gradient-to-b from-black to-emerald-950/20">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl md:text-6xl font-black mb-8 leading-tight">
+                Your car deserves to<br>
+                <span class="text-emerald-500 accent-glow">look new again.</span>
+            </h2>
+            
+            <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+                Book your appointment today and experience the MIO difference. Fast, professional, flawless.
+            </p>
+            
+            <button onclick="openBookingModal()" class="btn-primary px-12 py-6 rounded-full text-xl font-bold text-white inline-block mb-6">
+                Schedule Your Detail Today
+            </button>
+            
+            <p class="text-gray-400">
+                Or call us: <a href="tel:+1234567890" class="text-emerald-500 font-semibold hover:text-emerald-400 transition">(123) 456-7890</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12 px-6 border-t border-gray-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-12 mb-8">
+                <div>
+                    <h3 class="text-2xl font-black mb-4 text-emerald-500">MIO Custom And Detailing</h3>
+                    <p class="text-gray-400">
+                        Premium auto detailing.<br>
+                        Flawless results.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Contact</h4>
+                    <p class="text-gray-400 mb-2">
+                        <a href="tel:+1234567890" class="hover:text-emerald-500 transition">(123) 456-7890</a>
+                    </p>
+                    <p class="text-gray-400">
+                        Serving the local area
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Trust</h4>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex gap-1">
+                            <span class="star-icon text-sm">★</span>
+                            <span class="star-icon text-sm">★</span>
+                            <span class="star-icon text-sm">★</span>
+                            <span class="star-icon text-sm">★</span>
+                            <span class="star-icon text-sm">★</span>
+                        </div>
+                        <span class="text-gray-400 text-sm">Google Reviews</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Trusted by repeat customers
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-900 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 MIO Custom And Detailing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky Mobile CTA -->
+    <div class="sticky-cta" id="stickyCta">
+        <button onclick="openBookingModal()" class="btn-primary px-8 py-4 rounded-full font-bold text-white inline-block shadow-2xl">
+            Book Now
+        </button>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal-overlay" id="bookingModalOverlay">
+        <div class="booking-modal" id="bookingModal">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-black text-white">Book Your Detail</h2>
+                    <p class="text-gray-400 mt-1">Fill out the form and we'll confirm your appointment</p>
+                </div>
+                <button onclick="closeBookingModal()" class="close-modal-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Booking Form -->
+            <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+                <!-- Personal Info Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <span class="section-number">1</span>
+                        Personal Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required class="form-input" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required class="form-input" placeholder="(123) 456-7890">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address *</label>
+                        <input type="email" id="email" name="email" required class="form-input" placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <!-- Vehicle Info Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <span class="section-number">2</span>
+                        Vehicle Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="vehicleMake" class="form-label">Vehicle Make *</label>
+                            <input type="text" id="vehicleMake" name="vehicleMake" required class="form-input" placeholder="Toyota, Honda, BMW...">
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleModel" class="form-label">Vehicle Model *</label>
+                            <input type="text" id="vehicleModel" name="vehicleModel" required class="form-input" placeholder="Camry, Civic, X5...">
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="vehicleYear" class="form-label">Year</label>
+                            <input type="number" id="vehicleYear" name="vehicleYear" class="form-input" placeholder="2024" min="1900" max="2030">
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicleColor" class="form-label">Color</label>
+                            <input type="text" id="vehicleColor" name="vehicleColor" class="form-input" placeholder="Black, White, Silver...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Selection -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <span class="section-number">3</span>
+                        Select Service
+                    </h3>
+                    <div class="form-group">
+                        <label for="serviceType" class="form-label">Service Package *</label>
+                        <select id="serviceType" name="serviceType" required class="form-input form-select">
+                            <option value="">Choose a service...</option>
+                            <option value="interior">Full Interior Detailing - $150+</option>
+                            <option value="exterior">Exterior Detailing - $120+</option>
+                            <option value="carpet">Carpet & Rug Cleaning - $80+</option>
+                            <option value="headliner">Headliner & Deep Interior - $200+</option>
+                            <option value="custom">Custom Package - Get Quote</option>
+                            <option value="full">Full Detail Package - $300+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Date & Time Selection -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <span class="section-number">4</span>
+                        Schedule Appointment
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="appointmentDate" class="form-label">Preferred Date *</label>
+                            <div class="date-picker-wrapper">
+                                <input type="text" id="appointmentDate" name="appointmentDate" required class="form-input date-input" placeholder="Select a date" readonly>
+                                <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <!-- Custom Date Picker Calendar -->
+                            <div class="custom-calendar" id="customCalendar">
+                                <div class="calendar-header">
+                                    <button type="button" class="calendar-nav" id="prevMonth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <span class="calendar-month-year" id="calendarMonthYear"></span>
+                                    <button type="button" class="calendar-nav" id="nextMonth">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="calendar-weekdays">
+                                    <span>Sun</span>
+                                    <span>Mon</span>
+                                    <span>Tue</span>
+                                    <span>Wed</span>
+                                    <span>Thu</span>
+                                    <span>Fri</span>
+                                    <span>Sat</span>
+                                </div>
+                                <div class="calendar-days" id="calendarDays"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentTime" class="form-label">Preferred Time *</label>
+                            <select id="appointmentTime" name="appointmentTime" required class="form-input form-select">
+                                <option value="">Select a time...</option>
+                                <option value="8:00 AM">8:00 AM</option>
+                                <option value="9:00 AM">9:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="12:00 PM">12:00 PM</option>
+                                <option value="1:00 PM">1:00 PM</option>
+                                <option value="2:00 PM">2:00 PM</option>
+                                <option value="3:00 PM">3:00 PM</option>
+                                <option value="4:00 PM">4:00 PM</option>
+                                <option value="5:00 PM">5:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <span class="section-number">5</span>
+                        Additional Information
+                    </h3>
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Special Requests or Notes</label>
+                        <textarea id="notes" name="notes" rows="3" class="form-input form-textarea" placeholder="Any specific areas of concern, stains, pet hair, etc..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-8">
+                    <button type="submit" class="submit-btn w-full">
+                        <span class="submit-btn-text">Confirm Booking</span>
+                        <svg class="submit-btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                    <p class="text-center text-gray-500 text-sm mt-4">
+                        We'll contact you within 24 hours to confirm your appointment
+                    </p>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div class="booking-success hidden" id="bookingSuccess">
+                <div class="success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mt-6 mb-2">Booking Submitted!</h3>
+                <p class="text-gray-400 mb-6">Thank you for choosing MIO Custom And Detailing. We'll contact you shortly to confirm your appointment.</p>
+                <div class="success-details" id="successDetails"></div>
+                <button onclick="closeBookingModal()" class="btn-primary px-8 py-3 rounded-full font-bold text-white mt-6">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function toggleMobileMenu() {
+            hamburger.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('open')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section[id]');
+
+        window.addEventListener('scroll', () => {
+            // Add background on scroll
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Update active nav link based on scroll position
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // WebGL Shader Implementation with Emerald Green Theme
+        (function() {
+            const canvas = document.getElementById('webgl-canvas');
+            const heroSection = canvas.parentElement;
+            
+            const vertexShader = `
+                attribute vec3 position;
+                void main() {
+                    gl_Position = vec4(position, 1.0);
+                }
+            `;
+            // Modified shader with emerald green color scheme
+            const fragmentShader = `
+                precision highp float;
+                uniform vec2 resolution;
+                uniform float time;
+                uniform float xScale;
+                uniform float yScale;
+                uniform float distortion;
+                void main() {
+                    vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+                    
+                    float d = length(p) * distortion;
+                    
+                    float rx = p.x * (1.0 + d);
+                    float gx = p.x;
+                    float bx = p.x * (1.0 - d);
+                    // Emerald green theme - emphasize green channel
+                    float r = 0.02 / abs(p.y + sin((rx + time) * xScale) * yScale);
+                    float g = 0.06 / abs(p.y + sin((gx + time) * xScale) * yScale);
+                    float b = 0.04 / abs(p.y + sin((bx + time) * xScale) * yScale);
+                    
+                    // Add subtle emerald tint
+                    r *= 0.3;
+                    g *= 1.0;
+                    b *= 0.6;
+                    
+                    gl_FragColor = vec4(r, g, b, 1.0);
+                }
+            `;
+            let scene, camera, renderer, mesh, uniforms, animationId;
+            function initScene() {
+                scene = new THREE.Scene();
+                renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setClearColor(new THREE.Color(0x0a0a0a));
+                camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1);
+                uniforms = {
+                    resolution: { value: [heroSection.offsetWidth, heroSection.offsetHeight] },
+                    time: { value: 0.0 },
+                    xScale: { value: 1.0 },
+                    yScale: { value: 0.5 },
+                    distortion: { value: 0.05 },
+                };
+                const position = [
+                    -1.0, -1.0, 0.0,
+                     1.0, -1.0, 0.0,
+                    -1.0,  1.0, 0.0,
+                     1.0, -1.0, 0.0,
+                    -1.0,  1.0, 0.0,
+                     1.0,  1.0, 0.0,
+                ];
+                const positions = new THREE.BufferAttribute(new Float32Array(position), 3);
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute("position", positions);
+                const material = new THREE.RawShaderMaterial({
+                    vertexShader,
+                    fragmentShader,
+                    uniforms,
+                    side: THREE.DoubleSide,
+                });
+                mesh = new THREE.Mesh(geometry, material);
+                scene.add(mesh);
+                handleResize();
+            }
+            function animate() {
+                if (uniforms) uniforms.time.value += 0.01;
+                if (renderer && scene && camera) {
+                    renderer.render(scene, camera);
+                }
+                animationId = requestAnimationFrame(animate);
+            }
+            function handleResize() {
+                if (!renderer || !uniforms) return;
+                const width = heroSection.offsetWidth;
+                const height = heroSection.offsetHeight;
+                renderer.setSize(width, height, false);
+                uniforms.resolution.value = [width, height];
+            }
+            // Initialize
+            initScene();
+            animate();
+            window.addEventListener("resize", handleResize);
+            // Cleanup function (called on page unload)
+            window.addEventListener('beforeunload', () => {
+                if (animationId) cancelAnimationFrame(animationId);
+                if (mesh) {
+                    scene.remove(mesh);
+                    mesh.geometry.dispose();
+                    mesh.material.dispose();
+                }
+                renderer.dispose();
+            });
+        })();
+
+        // Before/After Slider
+        const sliderContainer = document.getElementById('sliderContainer');
+        const sliderHandle = document.getElementById('sliderHandle');
+        const beforeImage = document.getElementById('beforeImage');
+        
+        let isDragging = false;
+        
+        function updateSlider(clientX) {
+            const rect = sliderContainer.getBoundingClientRect();
+            let x = clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            
+            const percentage = (x / rect.width) * 100;
+            
+            sliderHandle.style.left = percentage + '%';
+            beforeImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+        }
+        
+        sliderHandle.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            e.preventDefault();
+        });
+        
+        sliderHandle.addEventListener('touchstart', (e) => {
+            isDragging = true;
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updateSlider(e.clientX);
+            }
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                updateSlider(e.touches[0].clientX);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+        
+        sliderContainer.addEventListener('click', (e) => {
+            updateSlider(e.clientX);
+        });
+        
+        // Sticky CTA on scroll (mobile only)
+        const stickyCta = document.getElementById('stickyCta');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 800) {
+                stickyCta.classList.add('visible');
+            } else {
+                stickyCta.classList.remove('visible');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== BOOKING MODAL FUNCTIONALITY =====
+        const bookingModalOverlay = document.getElementById('bookingModalOverlay');
+        const bookingModal = document.getElementById('bookingModal');
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingSuccess = document.getElementById('bookingSuccess');
+
+        function openBookingModal() {
+            bookingModalOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            // Reset form and show it
+            bookingForm.reset();
+            bookingForm.style.display = 'block';
+            bookingSuccess.classList.add('hidden');
+        }
+
+        function closeBookingModal() {
+            bookingModalOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+            // Close calendar if open
+            customCalendar.classList.remove('open');
+        }
+
+        // Close modal on overlay click
+        bookingModalOverlay.addEventListener('click', (e) => {
+            if (e.target === bookingModalOverlay) {
+                closeBookingModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && bookingModalOverlay.classList.contains('open')) {
+                closeBookingModal();
+            }
+        });
+
+        // ===== CUSTOM DATE PICKER =====
+        const dateInput = document.getElementById('appointmentDate');
+        const customCalendar = document.getElementById('customCalendar');
+        const calendarMonthYear = document.getElementById('calendarMonthYear');
+        const calendarDays = document.getElementById('calendarDays');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        let currentDate = new Date();
+        let selectedDate = null;
+
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            calendarMonthYear.textContent = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let html = '';
+            
+            // Empty cells for days before first day of month
+            for (let i = 0; i < firstDay; i++) {
+                html += '<button type="button" class="calendar-day empty"></button>';
+            }
+            
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                date.setHours(0, 0, 0, 0);
+                
+                let classes = 'calendar-day';
+                
+                // Check if date is in the past
+                if (date < today) {
+                    classes += ' disabled';
+                }
+                
+                // Check if it's today
+                if (date.getTime() === today.getTime()) {
+                    classes += ' today';
+                }
+                
+                // Check if selected
+                if (selectedDate && date.getTime() === selectedDate.getTime()) {
+                    classes += ' selected';
+                }
+                
+                const isDisabled = date < today;
+                html += `<button type="button" class="${classes}" data-date="${year}-${month + 1}-${day}" ${isDisabled ? 'disabled' : ''}>${day}</button>`;
+            }
+            
+            calendarDays.innerHTML = html;
+            
+            // Add click handlers to days
+            calendarDays.querySelectorAll('.calendar-day:not(.disabled):not(.empty)').forEach(dayBtn => {
+                dayBtn.addEventListener('click', () => {
+                    const dateStr = dayBtn.dataset.date;
+                    const [y, m, d] = dateStr.split('-').map(Number);
+                    selectedDate = new Date(y, m - 1, d);
+                    
+                    // Format the date nicely
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    dateInput.value = selectedDate.toLocaleDateString('en-US', options);
+                    
+                    // Close calendar
+                    customCalendar.classList.remove('open');
+                    
+                    // Re-render to show selection
+                    renderCalendar();
+                });
+            });
+        }
+
+        // Toggle calendar on input click
+        dateInput.addEventListener('click', () => {
+            customCalendar.classList.toggle('open');
+            if (customCalendar.classList.contains('open')) {
+                renderCalendar();
+            }
+        });
+
+        // Navigation buttons
+        prevMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // Close calendar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.date-picker-wrapper') && !e.target.closest('.custom-calendar')) {
+                customCalendar.classList.remove('open');
+            }
+        });
+
+        // ===== FORM SUBMISSION =====
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(bookingForm);
+            const data = Object.fromEntries(formData);
+            
+            // Build success details
+            const successDetails = document.getElementById('successDetails');
+            successDetails.innerHTML = `
+                <p><span>Name:</span> <strong>${data.fullName}</strong></p>
+                <p><span>Vehicle:</span> <strong>${data.vehicleYear || ''} ${data.vehicleMake} ${data.vehicleModel}</strong></p>
+                <p><span>Service:</span> <strong>${document.getElementById('serviceType').options[document.getElementById('serviceType').selectedIndex].text}</strong></p>
+                <p><span>Date:</span> <strong>${data.appointmentDate}</strong></p>
+                <p><span>Time:</span> <strong>${data.appointmentTime}</strong></p>
+            `;
+            
+            // Hide form, show success
+            bookingForm.style.display = 'none';
+            bookingSuccess.classList.remove('hidden');
+        }
+
+        // Update all Book Now buttons to open modal
+        document.querySelectorAll('a[href="#contact"]').forEach(btn => {
+            if (btn.textContent.includes('Book')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openBookingModal();
+                });
+            }
+        });
+
+        // Initialize calendar
+        renderCalendar();
+    </script>
+</body>
+</html>
